@@ -8,9 +8,19 @@ import 'package:uuid/uuid.dart';
 
 class StorageService {
   static Future<String> uploadUserProfileImage(
-      String url, File imageFile) async {
+    String url, File imageFile) async {
     String photoId = Uuid().v4();
     File image = await compressImage(photoId, imageFile);
+
+    /* Sepertinya Ini yang Menjadikan Foto itu tidak bertambah terus menerus jika melakukan update karena mungkin ini
+    Fungsinya Mengecek apakah ada data gambarnya jika ada gunakan nama yang sama., dan Mungkin Jika Penggunaan Nama Yang Sama Otomatis akan Mereplace data */
+    if (url.isNotEmpty) {
+      // Updating User Profile image
+      RegExp exp = RegExp(r'userProfile_(.*).jpg');
+      photoId = exp.firstMatch(url)[1];
+      print(photoId);
+    }
+
     StorageUploadTask uploadTask = storageRef
         .child('images/users/userProfile_$photoId.jpg')
         .putFile(image);
