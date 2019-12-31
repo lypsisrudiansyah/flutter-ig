@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ig/models/user_data.dart';
 import 'package:ig/screens/feed_screen.dart';
 import 'package:ig/screens/login_screen.dart';
+import 'package:provider/provider.dart';
 
 class AuthService {
   static final _auth = FirebaseAuth.instance;
@@ -18,8 +20,9 @@ class AuthService {
         _firestore.collection('/users').document(signedInUser.uid).setData({
           'name': name,
           'email': email,
-          'profileImageUrl': ''
+          'profileImageUrl': '',
         });
+        Provider.of<UserData>(context, listen: false).currentUserId = signedInUser.uid;
         Navigator.pop(context);
       }
     } catch (e) {

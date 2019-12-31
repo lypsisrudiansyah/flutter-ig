@@ -17,6 +17,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     var mq = MediaQuery.of(context).size;
     return Scaffold(
+        appBar: AppBar(
+        backgroundColor: Colors.white,
+        title: Text(
+          "Instagram",
+          style: TextStyle(
+              color: Colors.black, fontFamily: "Billabong", fontSize: 35),
+        ),
+      ),
         backgroundColor: Colors.white,
         body: FutureBuilder(
           future: usersRef.document(widget.userId).get(),
