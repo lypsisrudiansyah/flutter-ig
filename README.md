@@ -1,6 +1,12 @@
-# ig
+# instagram-clone
 
-A new Flutter project.
+A new Flutter project with firebase.
+
+## Installation
+
+1. clone this repository
+2. after that running command on this repository directory 
+run: flutter pub get
 
 ## Getting Started
 
