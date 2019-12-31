@@ -21,16 +21,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   File _profileImage;
   String _name = '';
   String _bio = '';
-  // String _profileImageUrl = '';
+  bool _isLoading = false;
 
   bool _isButtonTapped = false;
 
   _onTapped() {
-    setState(() => _isButtonTapped =
-        !_isButtonTapped);
-        // if (_isButtonTapped == false) {
-          _submit();
-        // }
+    setState(() => _isButtonTapped = !_isButtonTapped);
+    // if (_isButtonTapped == false) {
+    _submit();
+    // }
   }
 
   @override
@@ -56,7 +55,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       if (widget.user.profileImageUrl.isEmpty) {
         // Display image Placeholder
         return AssetImage('assets/images/user_profile.png');
-
       } else {
         // User Profile is Already Exists
         return CachedNetworkImageProvider(widget.user.profileImageUrl);
@@ -70,14 +68,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   _submit() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+
+      setState(() {
+        _isLoading = true;
+      });
+
       // Update User in Database
       String _profileImageUrl = '';
 
       if (_profileImage == null) {
         _profileImageUrl = widget.user.profileImageUrl;
       } else {
-
-        _profileImageUrl = await StorageService.uploadUserProfileImage(widget.user.profileImageUrl, _profileImage);
+        _profileImageUrl = await StorageService.uploadUserProfileImage(
+            widget.user.profileImageUrl, _profileImage);
       }
 
       User user = User(
@@ -103,75 +106,77 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             "Edit Profile",
             style: TextStyle(color: Colors.black),
           )),
-      body: SingleChildScrollView(
-        child: Container(
-          height: mq.height,
-          child: Padding(
-            padding: EdgeInsets.all(30.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundColor: Colors.white,
-                    backgroundImage: _displayProfileImage(),
-                  ),
-                  FlatButton(
-                    onPressed: _handleImageFromGallery,
-                    child: Text("Change Profile Image",
-                        style: TextStyle(
-                            color: Theme.of(context).accentColor,
-                            fontSize: 16)),
-                  ),
-                  TextFormField(
-                    initialValue: _name,
-                    style: TextStyle(fontSize: 18),
-                    decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.person,
-                          size: 30,
-                        ),
-                        labelText: "Name"),
-                    validator: (input) => input.trim().length < 1
-                        ? 'Please enter a Valid Name'
-                        : null,
-                    onSaved: (input) => _name = input,
-                  ),
-                  TextFormField(
-                    initialValue: _bio,
-                    style: TextStyle(fontSize: 18),
-                    decoration: InputDecoration(
-                        icon: Icon(
-                          Icons.book,
-                          size: 30,
-                        ),
-                        labelText: "Bio"),
-                    validator: (input) => input.trim().length > 150
-                        ? 'Please enter a Bio Less Than 150 Characters'
-                        : null,
-                    onSaved: (input) => _bio = input,
-                  ),
-                  Container(
-                    margin: EdgeInsets.all(40),
-                    height: 40,
-                    width: 250,
-                    child: FlatButton(
-                      onPressed: _isButtonTapped ? null : _onTapped, /* Checkpoint */
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      child: 
-                      _isButtonTapped ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlue),) :
-                      Text(
-                        "Save Profile",
-                        style: TextStyle(fontSize: 18),
-                      ),
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: ListView(
+          children: <Widget>[
+            _isLoading ? LinearProgressIndicator(backgroundColor: Colors.blue[200], valueColor: AlwaysStoppedAnimation(Colors.blue), ) : SizedBox.shrink(),
+            Padding(
+              padding: EdgeInsets.all(30.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.white,
+                      backgroundImage: _displayProfileImage(),
                     ),
-                  )
-                ],
+                    FlatButton(
+                      onPressed: _handleImageFromGallery,
+                      child: Text("Change Profile Image",
+                          style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontSize: 16)),
+                    ),
+                    TextFormField(
+                      initialValue: _name,
+                      style: TextStyle(fontSize: 18),
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.person,
+                            size: 30,
+                          ),
+                          labelText: "Name"),
+                      validator: (input) => input.trim().length < 1
+                          ? 'Please enter a Valid Name'
+                          : null,
+                      onSaved: (input) => _name = input,
+                    ),
+                    TextFormField(
+                      initialValue: _bio,
+                      style: TextStyle(fontSize: 18),
+                      decoration: InputDecoration(
+                          icon: Icon(
+                            Icons.book,
+                            size: 30,
+                          ),
+                          labelText: "Bio"),
+                      validator: (input) => input.trim().length > 150
+                          ? 'Please enter a Bio Less Than 150 Characters'
+                          : null,
+                      onSaved: (input) => _bio = input,
+                    ),
+                    Container(
+                      margin: EdgeInsets.all(40),
+                      height: 40,
+                      width: 250,
+                      child: FlatButton(
+                        onPressed: _isButtonTapped ? null : _onTapped,
+                        /* Checkpoint */
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        child: Text(
+                                "Save Profile",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
