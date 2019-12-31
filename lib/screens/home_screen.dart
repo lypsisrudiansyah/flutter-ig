@@ -47,7 +47,6 @@ class _HomeScreenState extends State<HomeScreen> {
           CreatePostScreen(),
           ActivityScreen(),
           ProfileScreen(userId: widget.userId,),
-          /* Checkpoint */
         ],
         onPageChanged: (int index) {
           setState(() {
