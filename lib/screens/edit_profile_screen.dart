@@ -163,7 +163,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       width: 250,
                       child: FlatButton(
                         onPressed: _isButtonTapped ? null : _onTapped,
-                        /* Checkpoint */
                         color: Colors.blue,
                         textColor: Colors.white,
                         child: Text(
