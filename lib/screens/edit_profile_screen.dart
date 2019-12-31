@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ig/models/user_models.dart';
 import 'package:ig/services/database_service.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:ig/services/storage_service.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User user;
@@ -13,8 +18,20 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+  File _profileImage;
   String _name = '';
   String _bio = '';
+  // String _profileImageUrl = '';
+
+  bool _isButtonTapped = false;
+
+  _onTapped() {
+    setState(() => _isButtonTapped =
+        !_isButtonTapped);
+        // if (_isButtonTapped == false) {
+          _submit();
+        // }
+  }
 
   @override
   void initState() {
@@ -23,11 +40,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _bio = widget.user.bio;
   }
 
-  _submit() {
+  _handleImageFromGallery() async {
+    File imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (imageFile != null) {
+      setState(() {
+        _profileImage = imageFile;
+      });
+    }
+  }
+
+  _displayProfileImage() {
+    // No New Profile Image
+    if (_profileImage == null) {
+      // No Existing Profile Image
+      if (widget.user.profileImageUrl.isEmpty) {
+        // Display image Placeholder
+        return AssetImage('assets/images/user_profile.png');
+
+      } else {
+        // User Profile is Already Exists
+        return CachedNetworkImageProvider(widget.user.profileImageUrl);
+      }
+    } else {
+      // New Profile Image
+      return FileImage(_profileImage);
+    }
+  }
+
+  _submit() async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       // Update User in Database
       String _profileImageUrl = '';
+
+      if (_profileImage == null) {
+        _profileImageUrl = widget.user.profileImageUrl;
+      } else {
+
+        _profileImageUrl = await StorageService.uploadUserProfileImage(widget.user.profileImageUrl, _profileImage);
+      }
+
       User user = User(
           id: widget.user.id,
           name: _name,
@@ -62,11 +114,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 60,
-                    backgroundImage: NetworkImage(
-                        "https://pbs.twimg.com/profile_images/914894066072113152/pWD-GUwG_400x400.jpg"),
+                    backgroundColor: Colors.white,
+                    backgroundImage: _displayProfileImage(),
                   ),
                   FlatButton(
-                    onPressed: () => print("Change Profile Image"),
+                    onPressed: _handleImageFromGallery,
                     child: Text("Change Profile Image",
                         style: TextStyle(
                             color: Theme.of(context).accentColor,
@@ -105,10 +157,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     height: 40,
                     width: 250,
                     child: FlatButton(
-                      onPressed: _submit,
+                      onPressed: _isButtonTapped ? null : _onTapped, /* Checkpoint */
                       color: Colors.blue,
                       textColor: Colors.white,
-                      child: Text(
+                      child: 
+                      _isButtonTapped ? CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Colors.lightBlue),) :
+                      Text(
                         "Save Profile",
                         style: TextStyle(fontSize: 18),
                       ),

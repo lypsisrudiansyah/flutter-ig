@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:ig/models/user_models.dart';
 import 'package:ig/screens/edit_profile_screen.dart';
@@ -34,9 +35,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Row(
                     children: <Widget>[
                       CircleAvatar(
+                        backgroundColor: Colors.white,
                         radius: 50,
-                        backgroundImage: NetworkImage(
-                            "https://pbs.twimg.com/profile_images/914894066072113152/pWD-GUwG_400x400.jpg"),
+                        backgroundImage: user.profileImageUrl.isEmpty
+                            ? AssetImage('assets/images/user_profile.png')
+                            : CachedNetworkImageProvider(user.profileImageUrl),
                       ),
                       Expanded(
                         child: Column(
