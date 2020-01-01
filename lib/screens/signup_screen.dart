@@ -51,12 +51,12 @@ class _SignupScreenState extends State<SignupScreen> {
       backgroundColor: Colors.white,
       appBar: null,
       body: GestureDetector(
-        onTap: () => {
+        onTap: () {
           setState(() {
             FocusScope.of(context).unfocus();
             _isLoading = !_isLoading;
             _isButtonTapped = !_isButtonTapped;
-          }),
+          });
         },
         child: ListView(
           children: <Widget>[

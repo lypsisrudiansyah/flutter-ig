@@ -49,12 +49,12 @@ class _LoginScreenState extends State<LoginScreen> {
     var mq = MediaQuery.of(context).size;
     return Scaffold(
       body: GestureDetector(
-        onTap: () => {
+        onTap: ()  {
           setState(() {
             FocusScope.of(context).unfocus();
             _isLoading = !_isLoading;
             _isButtonTapped = !_isButtonTapped;
-          }),
+          });
         },
         child: ListView(
           children: <Widget>[
