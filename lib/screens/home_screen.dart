@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final String currentUserId = Provider.of<UserData>(context, listen: false).currentUserId;
     print(Provider.of<UserData>(context, listen: false).currentUserId);
     /* Checkpoint */
     return Scaffold(
@@ -36,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           SearchScreen(),
           CreatePostScreen(),
           ActivityScreen(),
-          ProfileScreen(userId: Provider.of<UserData>(context, listen: false).currentUserId,),
+          ProfileScreen(currentUserId: currentUserId,userId: currentUserId,),
         ],
         onPageChanged: (int index) {
           setState(() {
