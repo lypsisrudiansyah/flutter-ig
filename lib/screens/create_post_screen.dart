@@ -12,10 +12,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text(
-          "Instagram",
+          "Create Post",
           style: TextStyle(
-              color: Colors.black, fontFamily: "Billabong", fontSize: 35),
+              color: Colors.black),
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => print('Add'),
+          )
+        ],
       ),
       body: Center(
         child: Text(

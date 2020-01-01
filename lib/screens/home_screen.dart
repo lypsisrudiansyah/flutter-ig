@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     print(Provider.of<UserData>(context, listen: false).currentUserId);
+    /* Checkpoint */
     return Scaffold(
       body: PageView(
         controller: _pageController,
