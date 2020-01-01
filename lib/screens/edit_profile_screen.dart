@@ -27,9 +27,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   _onTapped() {
     setState(() => _isButtonTapped = !_isButtonTapped);
-    // if (_isButtonTapped == false) {
+    if (_isButtonTapped == true) {
     _submit();
-    // }
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    print(_isButtonTapped);
   }
 
   @override
@@ -110,7 +114,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         onTap: () => FocusScope.of(context).unfocus(),
         child: ListView(
           children: <Widget>[
-            _isLoading ? LinearProgressIndicator(backgroundColor: Colors.blue[200], valueColor: AlwaysStoppedAnimation(Colors.blue), ) : SizedBox.shrink(),
+            _isLoading
+                ? LinearProgressIndicator(
+                    backgroundColor: Colors.blue[200],
+                    valueColor: AlwaysStoppedAnimation(Colors.blue),
+                  )
+                : SizedBox.shrink(),
             Padding(
               padding: EdgeInsets.all(30.0),
               child: Form(
@@ -162,13 +171,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       height: 40,
                       width: 250,
                       child: FlatButton(
+                        padding: EdgeInsets.all(10),
                         onPressed: _isButtonTapped ? null : _onTapped,
                         color: Colors.blue,
                         textColor: Colors.white,
                         child: Text(
-                                "Save Profile",
-                                style: TextStyle(fontSize: 18),
-                              ),
+                          "Save Profile",
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
                     )
                   ],

@@ -35,6 +35,7 @@ dependencies:
   path_provider: ^1.5.1
   uuid: ^2.0.4
   provider: ^4.0.1
+  image_cropper: ^1.1.2
 
 
 dev_dependencies:
